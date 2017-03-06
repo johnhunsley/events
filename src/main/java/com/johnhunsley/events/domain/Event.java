@@ -1,6 +1,7 @@
 package com.johnhunsley.events.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
@@ -25,6 +26,7 @@ public class Event implements Serializable {
     private String user;
 
     @DynamoDBAttribute(attributeName = "dateCreated")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="GMT")
     private Date created;
 
     @DynamoDBAttribute(attributeName = "longitude")
