@@ -43,11 +43,7 @@ public class EventsController {
         Account principle = AccountResolver.INSTANCE.getAccount(request);
 
         try {
-            Event event = eventFactory.createEvent(principle);
-            event.setStatus(template.getStatus());
-            event.setPriority(template.getPriority());
-            event.setLatitude(template.getLatitude());
-            event.setLongitude(template.getLongitude());
+            Event event = eventFactory.createEventFromTemplate(principle, template);
             eventsRepository.save(event);
             return new ResponseEntity(HttpStatus.OK);
 

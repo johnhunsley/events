@@ -3,6 +3,7 @@ package com.johnhunsley.events.domain;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.organization.Organization;
 import com.stormpath.sdk.organization.OrganizationList;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,10 @@ import java.util.Base64;
 import java.util.Date;
 
 /**
+ * <p>
+ *     Factory for creating {@link Event} instances in which the USerId, OrgId and resulting Hash are derived
+ *     from a given Stormpath {@link Account}
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
@@ -44,22 +49,23 @@ public class EventFactory {
 
     /**
      * <p>
-     *
+     *    Create an {@link Event} from the given credentials with a created date of now
      * </p>
      * @param account
      * @return {@link Event}
      */
     public Event createEvent(Account account) throws EventException {
-        return createEvent(account, new Date(System.currentTimeMillis()));
+        return createEvent(account, DateTime.now().toDate());
     }
 
     /**
      * <p>
-     *
+     *     Create an {@link Event} from the given credentials and given date. UserId, OrgId
+     *     and Hash are derived from the given Account.
      * </p>
      * @param account
      * @param date
-     * @return
+     * @return {@link Event}
      */
     public Event createEvent(Account account, Date date) throws EventException {
         final String userId = resolveUserId(account);
@@ -69,10 +75,30 @@ public class EventFactory {
 
     /**
      * <p>
-     *
+     *     Creates a new {@link Event} instance using the given {@link Account} credentials and the
+     *     given Event instance properties. Only the credentials from the given account are used to
+     *     formulate the Hash, userId and OrgId of the resulting Event instance
      * </p>
      * @param account
+     * @param template
      * @return
+     * @throws EventException
+     */
+    public Event createEventFromTemplate(Account account, Event template) throws EventException {
+        Event event = createEvent(account);
+        event.setStatus(template.getStatus());
+        event.setPriority(template.getPriority());
+        event.setLatitude(template.getLatitude());
+        event.setLongitude(template.getLongitude());
+        return event;
+    }
+
+    /**
+     * <p>
+     *      Derives the Stormpath userId from the HREF of the given {@link Account} instance
+     * </p>
+     * @param account
+     * @return userID
      * @throws EventException
      */
     public String resolveUserId(Account account) throws EventException {
@@ -86,7 +112,7 @@ public class EventFactory {
 
     /**
      * <p>
-     *
+     *  Derives the organisationId from the HREF of the given {@link Account}
      * </p>
      * @param account
      * @return
@@ -107,7 +133,10 @@ public class EventFactory {
     }
 
     /**
-     *
+     * <p>
+     *     Creates and returns an MD5 Hash of the given user and the given date
+     *     concatenated with a colon character
+     * </p>
      * @param user
      * @param created
      * @return

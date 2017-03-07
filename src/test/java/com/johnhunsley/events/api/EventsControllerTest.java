@@ -91,6 +91,7 @@ public class EventsControllerTest {
         event.setPriority("High");
         given(eventFactory.createEvent(anyObject())).willReturn(event);
         given(eventsRepository.save(event)).willReturn(event);
+
         mockMvc.perform(post("/events/").contentType("application/json").content(mapper.writeValueAsString(event)))
                 .andDo(print())
                 .andExpect(status().isOk())
