@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +44,6 @@ import static org.mockito.Mockito.when;
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("integration")
 public class EventsRepositoryIntegrationTest {
 
     @Autowired
@@ -77,6 +79,7 @@ public class EventsRepositoryIntegrationTest {
         try {
             Event event = eventFactory.createEvent(account);
             event.setPriority("High");
+            event.setStatus("Closed");
             eventsRepository.save(event);
 
         } catch (EventException e) {
@@ -85,9 +88,21 @@ public class EventsRepositoryIntegrationTest {
         }
     }
 
-//    @Test
-//    public void testPageEvents() {
-//        eventsRepository.findAll()
-//    }
+    @Test
+    public void testPageAllEvents() {
+        Page<Event> page = eventsRepository.findAll(new PageRequest(0, 20));
+        assertFalse(page.getContent().isEmpty());
+    }
 
+    @Test
+    public void testPageEventsByOrg() {
+        Page<Event> page = eventsRepository.findByOrg(orgId, new PageRequest(0,20));
+        assertFalse(page.getContent().isEmpty());
+    }
+
+    @Test
+    public void testFindEventsbyStatus() {
+        Page<Event> page = eventsRepository.findByOrgAndStatus(orgId, "Open", new PageRequest(0,20));
+        assertFalse(page.getContent().isEmpty());
+    }
 }

@@ -38,6 +38,9 @@ public class Event implements Serializable {
     @DynamoDBAttribute(attributeName = "priority")
     private String priority;
 
+    @DynamoDBAttribute(attributeName = "status")
+    private String status;
+
     public Event() {}
 
     /**
@@ -71,7 +74,7 @@ public class Event implements Serializable {
         return eventId != null ? eventId.getOrganisation() : null;
     }
 
-    public void setOrganisation(final String organisation) {
+    public void setOrg(final String organisation) {
         if(eventId == null) eventId = new EventId();
         eventId.setOrganisation(organisation);
     }
@@ -114,5 +117,29 @@ public class Event implements Serializable {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        return !(eventId != null ? !eventId.equals(event.eventId) : event.eventId != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return eventId != null ? eventId.hashCode() : 0;
     }
 }
