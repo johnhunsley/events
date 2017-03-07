@@ -43,8 +43,8 @@ public class EventsController {
         Account principle = AccountResolver.INSTANCE.getAccount(request);
 
         try {
-            Event event = eventFactory.createEventFromTemplate(principle, template);
-            eventsRepository.save(event);
+            eventsRepository.save(
+                    eventFactory.createEventFromTemplate(principle, template));
             return new ResponseEntity(HttpStatus.OK);
 
         } catch (EventException e) {

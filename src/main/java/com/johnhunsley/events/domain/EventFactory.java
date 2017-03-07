@@ -36,7 +36,6 @@ public class EventFactory {
     @Value("${stormpath.org.path}")
     private String STORMPATH_API_ORG_PATH;
 
-
     private String stormpathAccountsUrl;
 
     private String stormpathOrgsUrl;
