@@ -16,7 +16,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/events/*").authenticated()
+                .antMatchers("/events/").authenticated()
                 .antMatchers("/**").permitAll();
 
     }

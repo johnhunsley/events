@@ -75,7 +75,7 @@ public class EventFactory {
      * @return
      * @throws EventException
      */
-    private String resolveUserId(Account account) throws EventException {
+    public String resolveUserId(Account account) throws EventException {
         final String userHref = account.getHref();
         final String userId = userHref.substring(stormpathAccountsUrl.length());
 
@@ -92,7 +92,7 @@ public class EventFactory {
      * @return
      * @throws EventException
      */
-    private String resolveOrgId(Account account) throws EventException {
+    public String resolveOrgId(Account account) throws EventException {
         OrganizationList list =  account.getDirectory().getOrganizations();
 
         if(list.getSize() != 1) throw new EventException(
