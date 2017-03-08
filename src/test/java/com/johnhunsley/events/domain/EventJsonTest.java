@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -41,7 +42,7 @@ public class EventJsonTest {
     public void testSerialize() {
         Date now = DateTime.now().toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
-        String expected = "{\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+        final String expected = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
 
         try {
             Hash hash = new Hash(Hash.MD5_TYPE);
@@ -51,6 +52,24 @@ public class EventJsonTest {
             event.setPriority("High");
             System.out.println(tester.write(event).getJson());
             assertThat(tester.write(event)).isEqualToJson(expected);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDeserialize() {
+        Date now = DateTime.now().toDate();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
+        final String json = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+
+        try {
+            Event event = tester.parseObject(json);
+            assertTrue(event.getUser().equals("12345abc"));
+            assertTrue(event.getOrg().equals("54321cba"));
+            assertTrue(event.getHash().equals("KPZz8xzdavUNHwuOK3G55Q=="));
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -3,6 +3,10 @@ package com.johnhunsley.events.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import com.fasterxml.jackson.databind.jsontype.impl.MinimalClassNameIdResolver;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -13,6 +17,11 @@ import java.util.Date;
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "class")
 @DynamoDBTable(tableName = "events")
 public class Event implements Serializable {
     private static final long serialVersionUID = 100L;

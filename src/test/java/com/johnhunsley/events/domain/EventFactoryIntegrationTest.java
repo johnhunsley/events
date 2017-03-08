@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EventFactoryTest {
+public class EventFactoryIntegrationTest {
 
     @Autowired
     private EventFactory eventFactory;

@@ -7,8 +7,8 @@ import com.johnhunsley.events.repository.EventsPagingAndSortingRepository;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *         Time : 14:15
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(value =EventsController.class, secure = false)
+@WebMvcTest(value = EventsController.class, secure = false)
 public class EventsControllerTest {
 
     @MockBean
