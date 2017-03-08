@@ -77,4 +77,19 @@ public class EventJsonTest {
         }
     }
 
+    @Test
+    public void testDeserializeClassNameFailure() {
+        Date now = DateTime.now().toDate();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
+        final String json = "{\"class\":\"Teapot\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+
+        try {
+            tester.parseObject(json);
+            fail();
+
+        } catch (IOException e) {
+            //pass - cannot resolve class named 'Teapot'
+        }
+    }
+
 }
