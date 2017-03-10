@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnhunsley.events.domain.Event;
 import com.johnhunsley.events.domain.EventFactory;
 import com.johnhunsley.events.repository.EventsPagingAndSortingRepository;
+import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -94,7 +95,7 @@ public class EventsControllerTest {
 
         mockMvc.perform(post("/events/").contentType("application/json").content(mapper.writeValueAsString(event)))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is(HttpStatus.SC_ACCEPTED))
                 .andReturn();
     }
 

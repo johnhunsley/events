@@ -45,7 +45,7 @@ public class EventsController {
         try {
             eventsRepository.save(
                     eventFactory.createEventFromTemplate(principle, template));
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
 
         } catch (EventException e) {
             e.printStackTrace();
@@ -98,6 +98,7 @@ public class EventsController {
                     new EventId(hash, eventFactory.resolveOrgId(principle)));
             event.setStatus(template.getStatus());
             eventsRepository.save(event);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
 
         } catch (EventException e) {
             e.printStackTrace();
