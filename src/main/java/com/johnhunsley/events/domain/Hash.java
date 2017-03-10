@@ -21,7 +21,6 @@ package com.johnhunsley.events.domain;
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 27/09/2016
- *         Time : 19:44
  */
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.MD5Digest;

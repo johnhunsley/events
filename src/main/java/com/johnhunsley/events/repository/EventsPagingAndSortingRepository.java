@@ -15,7 +15,6 @@ import java.util.Collection;
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
- *         Time : 14:49
  */
 @EnableScan
 @EnableScanCount

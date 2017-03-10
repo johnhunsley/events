@@ -4,7 +4,6 @@ package com.johnhunsley.events.domain;
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
- *         Time : 10:35
  */
 public class EventException extends Exception {
 
