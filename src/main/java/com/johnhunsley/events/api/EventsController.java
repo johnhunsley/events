@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
  *         jphunsley@gmail.com
  *         Date : 07/03/2017
  */
-@CrossOrigin
 @RestController
 @RequestMapping("events/")
 public class EventsController {
@@ -38,6 +37,7 @@ public class EventsController {
      * @param request
      * @return
      */
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity createEvent(@RequestBody Event template, HttpServletRequest request) {
         Account principle = AccountResolver.INSTANCE.getAccount(request);
@@ -61,6 +61,7 @@ public class EventsController {
      * @param request
      * @return
      */
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Page<Event>> getOpenEventsByOrg(@RequestParam("page") final int page,
                                                           @RequestParam("size") final int size,
@@ -89,6 +90,7 @@ public class EventsController {
      * @param request
      * @return
      */
+    @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity updateEvent(@PathVariable final String hash, @RequestBody final Event template, HttpServletRequest request) {
         Account principle = AccountResolver.INSTANCE.getAccount(request);
