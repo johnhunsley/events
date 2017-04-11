@@ -29,6 +29,9 @@ public class EventsController {
     private EventFactory eventFactory;
 
     @Autowired
+    private AccountResolver accountResolver;
+
+    @Autowired
     private EventsPagingAndSortingRepository eventsRepository;
 
     /**
@@ -40,7 +43,7 @@ public class EventsController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity createEvent(@RequestBody Event template, HttpServletRequest request) {
-        Account principle = AccountResolver.INSTANCE.getAccount(request);
+        Account principle = accountResolver.getAccount(request);
 
         try {
             eventsRepository.save(
@@ -66,7 +69,7 @@ public class EventsController {
     public ResponseEntity<Page<Event>> getOpenEventsByOrg(@RequestParam("page") final int page,
                                                           @RequestParam("size") final int size,
                                                           HttpServletRequest request) {
-        Account principle = AccountResolver.INSTANCE.getAccount(request);
+        Account principle = accountResolver.getAccount(request);
 
         try {
             return new ResponseEntity<>(
@@ -93,7 +96,7 @@ public class EventsController {
     @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity updateEvent(@PathVariable final String hash, @RequestBody final Event template, HttpServletRequest request) {
-        Account principle = AccountResolver.INSTANCE.getAccount(request);
+        Account principle = accountResolver.getAccount(request);
 
         try {
             Event event = eventsRepository.findOne(
