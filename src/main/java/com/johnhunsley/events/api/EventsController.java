@@ -83,6 +83,24 @@ public class EventsController {
 
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "{hash}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Event> getEventById(@PathVariable("hash") final String hash, HttpServletRequest request) {
+        Account principle = accountResolver.getAccount(request);
+
+        try {
+            Event event = eventsRepository.findOne(new EventId(hash, eventFactory.resolveOrgId(principle)));
+
+            if(event !=  null) return new ResponseEntity<>(event, HttpStatus.OK);
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        } catch (EventException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
      * <p>
      *     Updates the status of the resolved {@link Event} with the status of the given object
