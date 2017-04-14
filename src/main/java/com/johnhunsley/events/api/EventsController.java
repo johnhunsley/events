@@ -43,7 +43,7 @@ public class EventsController {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
-    @PreAuthorize("hasPermission('functionalAccess', 'CUSTOMER')")
+    @PreAuthorize("hasPermission('customer', 'CUSTOMER')")
     public ResponseEntity createEvent(@RequestBody Event template, HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
@@ -68,7 +68,7 @@ public class EventsController {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    @PreAuthorize("hasPermission('functionalAccess', 'SERVICE_PROVIDER')")
+    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity<Page<Event>> getOpenEventsByOrg(@RequestParam("page") final int page,
                                                           @RequestParam("size") final int size,
                                                           HttpServletRequest request) {
@@ -88,7 +88,7 @@ public class EventsController {
 
     @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.GET, produces = "application/json")
-    @PreAuthorize("hasPermission('functionalAccess', 'SERVICE_PROVIDER')")
+    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity<Event> getEventById(@PathVariable("hash") final String hash, HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
@@ -117,7 +117,7 @@ public class EventsController {
      */
     @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.PUT, consumes = "application/json")
-    @PreAuthorize("hasPermission('functionalAccess', 'SERVICE_PROVIDER')")
+    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity updateEvent(@PathVariable final String hash, @RequestBody final Event template, HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
