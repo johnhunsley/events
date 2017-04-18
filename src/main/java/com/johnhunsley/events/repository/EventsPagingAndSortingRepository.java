@@ -26,6 +26,10 @@ public interface EventsPagingAndSortingRepository extends DynamoDBPagingAndSorti
 
     Page<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status, Pageable pageable);
 
+    Page<Event> findByOrgAndStatusAndPriority(@Param("org") String organisation, @Param("status") String status, @Param("priority") String priority, Pageable pageable);
+
+    Page<Event> findByOrgAndPriority(@Param("org") String organisation, @Param("priority") String priority, Pageable pageable);
+
     Collection<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status);
 
 }

@@ -40,7 +40,7 @@ public class EventJsonTest {
     @Autowired
     private JacksonTester<Event> tester;
 
-//    @Test
+    @Test
     public void testSerialize() {
         Date now = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("BST"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
