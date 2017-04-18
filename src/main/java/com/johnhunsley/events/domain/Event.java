@@ -50,6 +50,15 @@ public class Event implements Serializable {
     @DynamoDBAttribute(attributeName = "status")
     private String status;
 
+    @DynamoDBAttribute(attributeName = "firstName")
+    private String firstName;
+
+    @DynamoDBAttribute(attributeName = "lastName")
+    private String lastName;
+
+    @DynamoDBAttribute(attributeName = "phoneNumber")
+    private String phoneNumber;
+
     public Event() {}
 
     /**
@@ -134,6 +143,30 @@ public class Event implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

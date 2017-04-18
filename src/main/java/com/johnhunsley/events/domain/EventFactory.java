@@ -89,6 +89,9 @@ public class EventFactory {
         event.setPriority(template.getPriority());
         event.setLatitude(template.getLatitude());
         event.setLongitude(template.getLongitude());
+        event.setFirstName(account.getGivenName());
+        event.setLastName(account.getSurname());
+        event.setPhoneNumber(account.getCustomData().get("PhoneNumber").toString());
         return event;
     }
 

@@ -34,6 +34,30 @@ public class EventController {
     @Autowired
     private EventsPagingAndSortingRepository eventsRepository;
 
+    /**
+     *
+     * @param template
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    @PreAuthorize("hasPermission('customer', 'CUSTOMER')")
+    public ResponseEntity createEvent(@RequestBody Event template, HttpServletRequest request) {
+        Account principle = accountResolver.getAccount(request);
+
+        try {
+            eventsRepository.save(
+                    eventFactory.createEventFromTemplate(principle, template));
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+
+        } catch (EventException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.GET, produces = "application/json")
     @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
