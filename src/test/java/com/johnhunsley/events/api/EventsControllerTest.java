@@ -8,6 +8,7 @@ import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;
@@ -61,7 +63,7 @@ public class EventsControllerTest {
 
     @Test
     public void testGetOpenEventsByOrg() throws Exception {
-        Date now = DateTime.now().toDate();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         final String expected = "{\"content\":[{\"user\":\"987654321cba\",\"created\":\""+df.format(now)+"\",\"longitude\":0.0,\"latitude\":0.0,\"priority\":\"High\",\"status\":\"Open\",\"hash\":\"pQPMBLoSO+iv+/i/hxzwjg==\",\"org\":\"4xnzkhxFnF1vMnj5N6knT4\"}],\"totalPages\":1,\"totalElements\":1,\"last\":true,\"size\":20,\"number\":0,\"sort\":null,\"numberOfElements\":1,\"first\":true}";
         Event event = new Event("987654321cba", now, "pQPMBLoSO+iv+/i/hxzwjg==", "4xnzkhxFnF1vMnj5N6knT4");

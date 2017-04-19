@@ -42,7 +42,7 @@ public class EventJsonTest {
 
     @Test
     public void testSerialize() {
-        Date now = new Date();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         final String expected = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
 
@@ -63,7 +63,7 @@ public class EventJsonTest {
 
     @Test
     public void testDeserialize() {
-        Date now = DateTime.now().toDate();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         final String json = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
 
@@ -81,7 +81,7 @@ public class EventJsonTest {
 
     @Test
     public void testDeserializeClassNameFailure() {
-        Date now = DateTime.now().toDate();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         final String json = "{\"class\":\"Teapot\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
 

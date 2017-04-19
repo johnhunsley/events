@@ -8,6 +8,7 @@ import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;
@@ -51,7 +53,7 @@ public class EventControllerTest {
     @Test
     public void testCreateEvent() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Date now = DateTime.now().toDate();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         Event event = new Event("987654321cba", now, "pQPMBLoSO+iv+/i/hxzwjg==", "4xnzkhxFnF1vMnj5N6knT4");
         event.setLongitude(0);
@@ -70,7 +72,7 @@ public class EventControllerTest {
     @Test
     public void testUpdateEvent() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Date now = DateTime.now().toDate();
+        Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         Event event = new Event("987654321cba", now, "pQPMBLoSO+iv+/i/hxzwjg==", "4xnzkhxFnF1vMnj5N6knT4");
         event.setLongitude(0);
