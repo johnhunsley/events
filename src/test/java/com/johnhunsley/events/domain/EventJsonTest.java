@@ -42,7 +42,7 @@ public class EventJsonTest {
 
     @Test
     public void testSerialize() {
-        Date now = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("UTC"))).toDate();
+        Date now = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
         final String expected = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
 

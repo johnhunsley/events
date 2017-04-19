@@ -35,7 +35,7 @@ public class Event implements Serializable {
     private String user;
 
     @DynamoDBAttribute(attributeName = "dateCreated")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="GMT+1")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="Europe/London")
     private Date created;
 
     @DynamoDBAttribute(attributeName = "longitude")
