@@ -2,6 +2,7 @@ package com.johnhunsley.events.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public class EventId implements Serializable {
     private String hash;
 
     @DynamoDBRangeKey(attributeName = "org")
+//    @DynamoDBIndexHashKey(globalSecondaryIndexName = "org-created-index")
     private String organisation;
 
     public EventId() {}

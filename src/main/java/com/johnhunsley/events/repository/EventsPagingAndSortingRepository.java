@@ -7,6 +7,7 @@ import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScanCount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
@@ -26,10 +27,14 @@ public interface EventsPagingAndSortingRepository extends DynamoDBPagingAndSorti
 
     Page<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status, Pageable pageable);
 
+    Collection<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status);
+
     Page<Event> findByOrgAndStatusAndPriority(@Param("org") String organisation, @Param("status") String status, @Param("priority") String priority, Pageable pageable);
 
     Page<Event> findByOrgAndPriority(@Param("org") String organisation, @Param("priority") String priority, Pageable pageable);
 
-    Collection<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status);
+    Collection<Event> findByOrgAndPriority(@Param("org") String organisation, @Param("priority") String priority);
+
+
 
 }

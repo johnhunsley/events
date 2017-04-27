@@ -23,7 +23,7 @@ import java.util.Date;
         include = JsonTypeInfo.As.PROPERTY,
         property = "class")
 @DynamoDBTable(tableName = "events")
-public class Event implements Serializable {
+public class Event implements Serializable, Comparable {
     private static final long serialVersionUID = 100L;
 
     @Id
@@ -35,6 +35,7 @@ public class Event implements Serializable {
     private String user;
 
     @DynamoDBAttribute(attributeName = "dateCreated")
+//    @DynamoDBIndexRangeKey(globalSecondaryIndexName = "org-created-index")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="Europe/London")
     private Date created;
 
@@ -183,5 +184,14 @@ public class Event implements Serializable {
     @Override
     public int hashCode() {
         return eventId != null ? eventId.hashCode() : 0;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o instanceof Event) {
+            return ((Event) o).getCreated().compareTo(this.created);
+        }
+
+        return 0;
     }
 }

@@ -9,12 +9,14 @@ import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 /**
  * @author John Hunsley
@@ -51,7 +53,7 @@ public class EventsController {
 
         try {
             return new ResponseEntity<>(
-                    eventsRepository.findByOrgAndStatus(
+                    eventsRepository.findByOrgAndPriority(
                             eventFactory.resolveOrgId(principle), "Open", new PageRequest(page,size)), HttpStatus.OK);
 
         } catch (EventException e) {
@@ -73,16 +75,17 @@ public class EventsController {
     @CrossOrigin
     @RequestMapping(value = "{priority}", method = RequestMethod.GET, produces = "application/json")
     @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
-    public ResponseEntity<Page<Event>> getOpenEventsByOrgAndPriority(@PathVariable("priority") final String priority,
+    public ResponseEntity<Collection<Event>> getOpenEventsByOrgAndPriority(@PathVariable("priority") final String priority,
                                                           @RequestParam("page") final int page,
                                                           @RequestParam("size") final int size,
                                                           HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
         try {
+            PageRequest pageRequest = new PageRequest(page, size,  new Sort(new Sort.Order(Sort.Direction.DESC, "created")));
             return new ResponseEntity<>(
                     eventsRepository.findByOrgAndPriority(
-                            eventFactory.resolveOrgId(principle), priority, new PageRequest(page, size)), HttpStatus.OK);
+                            eventFactory.resolveOrgId(principle), priority), HttpStatus.OK);
 
         } catch (EventException e) {
             e.printStackTrace();
