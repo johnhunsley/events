@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 /**
  * @author John Hunsley
@@ -65,7 +66,13 @@ public class EventController {
         Account principle = accountResolver.getAccount(request);
 
         try {
-            Event event = eventsRepository.findOne(new EventId(hash, eventFactory.resolveOrgId(principle)));
+            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(principle));
+
+            if(events.isEmpty() || events.size() > 1) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            Event event = events.iterator().next();
 
             if(event !=  null) return new ResponseEntity<>(event, HttpStatus.OK);
 
@@ -94,8 +101,13 @@ public class EventController {
         Account principle = accountResolver.getAccount(request);
 
         try {
-            Event event = eventsRepository.findOne(
-                    new EventId(hash, eventFactory.resolveOrgId(principle)));
+            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(principle));
+
+            if(events.isEmpty() || events.size() > 1) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            Event event = events.iterator().next();
             event.setStatus(template.getStatus());
             eventsRepository.save(event);
             return new ResponseEntity(HttpStatus.ACCEPTED);
