@@ -75,7 +75,7 @@ public class EventsControllerTest {
         eventList.add(event);
         Page<Event> page = new PageImpl<>(eventList, new PageRequest(0,20), 1);
         given(eventFactory.resolveOrgId(anyObject())).willReturn("");
-        given(eventsRepository.findByOrgAndStatus(anyString(), anyString(), anyObject())).willReturn(page);
+        given(eventsRepository.findByOrganisationAndStatus(anyString(), anyString(), anyObject())).willReturn(page);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");
         params.add("size", "20");

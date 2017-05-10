@@ -1,11 +1,10 @@
 package com.johnhunsley.events.domain;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author John Hunsley
@@ -19,15 +18,14 @@ public class EventId implements Serializable {
     @DynamoDBHashKey(attributeName = "hash")
     private String hash;
 
-    @DynamoDBRangeKey(attributeName = "org")
-//    @DynamoDBIndexHashKey(globalSecondaryIndexName = "org-created-index")
-    private String organisation;
+    @DynamoDBRangeKey(attributeName = "user")
+    private String user;
 
     public EventId() {}
 
-    public EventId(final String hash, final String organisation) {
+    public EventId(final String hash, final String user) {
         this.hash = hash;
-        this.organisation = organisation;
+        this.user = user;
     }
 
     public String getHash() {
@@ -38,12 +36,12 @@ public class EventId implements Serializable {
         this.hash = hash;
     }
 
-    public String getOrganisation() {
-        return organisation;
+    public String getUser() {
+        return user;
     }
 
-    public void setOrganisation(String organisation) {
-        this.organisation = organisation;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
@@ -54,14 +52,14 @@ public class EventId implements Serializable {
         EventId eventId = (EventId) o;
 
         if (!getHash().equals(eventId.getHash())) return false;
-        return getOrganisation().equals(eventId.getOrganisation());
+        return getUser().equals(eventId.getUser());
 
     }
 
     @Override
     public int hashCode() {
         int result = getHash().hashCode();
-        result = 31 * result + getOrganisation().hashCode();
+        result = 31 * result + getUser().hashCode();
         return result;
     }
 }

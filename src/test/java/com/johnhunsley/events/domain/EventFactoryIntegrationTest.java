@@ -61,7 +61,7 @@ public class EventFactoryIntegrationTest {
     public void testCreateEvent() {
         try {
             Event event = eventFactory.createEvent(account);
-            assertTrue(event.getOrg().equals(orgId));
+            assertTrue(event.getOrganisation().equals(orgId));
             assertTrue(event.getUser().equals(accountId));
             assertNotNull(event);
 

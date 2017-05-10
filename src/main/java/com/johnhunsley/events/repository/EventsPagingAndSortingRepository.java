@@ -17,23 +17,31 @@ import java.util.Collection;
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
  */
-@EnableScan
-@EnableScanCount
 public interface EventsPagingAndSortingRepository extends DynamoDBPagingAndSortingRepository<Event, EventId> {
 
-    Page<Event> findByOrg(@Param("org") String organisation, Pageable pageable);
+    @EnableScan
+    @EnableScanCount
+    Page<Event> findByOrganisation(@Param("organisation") String organisation, Pageable pageable);
 
-    Collection<Event> findByOrg(@Param("org") String organisation);
+    @EnableScan
+    @EnableScanCount
+    Collection<Event> findByHashAndOrganisation(@Param("hash") String hash, @Param("organisation") String organisation);
 
-    Page<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status, Pageable pageable);
+    Collection<Event> findByOrganisation(@Param("organisation") String organisation);
 
-    Collection<Event> findByOrgAndStatus(@Param("org") String organisation, @Param("status") String status);
+    @EnableScan
+    @EnableScanCount
+    Page<Event> findByOrganisationAndStatus(@Param("organisation") String organisation, @Param("status") String status, Pageable pageable);
 
-    Page<Event> findByOrgAndStatusAndPriority(@Param("org") String organisation, @Param("status") String status, @Param("priority") String priority, Pageable pageable);
+    Collection<Event> findByOrganisationAndStatus(@Param("organisation") String organisation, @Param("status") String status);
 
-    Page<Event> findByOrgAndPriority(@Param("org") String organisation, @Param("priority") String priority, Pageable pageable);
+    Page<Event> findByOrganisationAndStatusAndPriority(@Param("organisation") String organisation, @Param("status") String status, @Param("priority") String priority, Pageable pageable);
 
-    Collection<Event> findByOrgAndPriority(@Param("org") String organisation, @Param("priority") String priority);
+    Page<Event> findByOrganisationAndPriorityOrderByCreatedDateDesc(@Param("organisation") String organisation, @Param("priority") String priority, Pageable pageable);
+
+    @EnableScan
+    @EnableScanCount
+    Page<Event> findByStatusAndPriority(@Param("status") String status, @Param("priority") String priority, Pageable pageable);
 
 
 

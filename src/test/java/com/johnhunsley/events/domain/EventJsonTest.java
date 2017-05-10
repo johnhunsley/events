@@ -44,7 +44,7 @@ public class EventJsonTest {
     public void testSerialize() {
         Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
-        final String expected = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+        final String expected = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"organisation\":\"54321cba\"}";
 
         try {
             Hash hash = new Hash(Hash.MD5_TYPE);
@@ -65,12 +65,12 @@ public class EventJsonTest {
     public void testDeserialize() {
         Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
-        final String json = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+        final String json = "{\"class\":\"Event\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"organisation\":\"54321cba\"}";
 
         try {
             Event event = tester.parseObject(json);
             assertTrue(event.getUser().equals("12345abc"));
-            assertTrue(event.getOrg().equals("54321cba"));
+            assertTrue(event.getOrganisation().equals("54321cba"));
             assertTrue(event.getHash().equals("KPZz8xzdavUNHwuOK3G55Q=="));
 
         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class EventJsonTest {
     public void testDeserializeClassNameFailure() {
         Date now = DateTime.now(DateTimeZone.UTC.forTimeZone(TimeZone.getTimeZone("Europe/London"))).toDate();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss:SSS");
-        final String json = "{\"class\":\"Teapot\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"org\":\"54321cba\"}";
+        final String json = "{\"class\":\"Teapot\",\"user\":\"12345abc\",\"created\":\""+df.format(now)+"\",\"longitude\":-50.09745,\"latitude\":1.0101,\"priority\":\"High\",\"hash\":\"KPZz8xzdavUNHwuOK3G55Q==\",\"organisation\":\"54321cba\"}";
 
         try {
             tester.parseObject(json);

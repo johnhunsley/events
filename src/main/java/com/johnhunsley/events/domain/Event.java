@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import com.fasterxml.jackson.databind.jsontype.impl.MinimalClassNameIdResolver;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -22,22 +20,22 @@ import java.util.Date;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "class")
-@DynamoDBTable(tableName = "events")
-public class Event implements Serializable, Comparable {
+@DynamoDBTable(tableName = "events3")
+public class Event implements Serializable {
     private static final long serialVersionUID = 100L;
+
 
     @Id
     @DynamoDBIgnore
     @JsonIgnore
     private EventId eventId;
 
-    @DynamoDBAttribute(attributeName = "user")
-    private String user;
+    @DynamoDBIndexHashKey(attributeName = "organisation", globalSecondaryIndexName = "organisation-createdDate-index")
+    private String organisation;
 
-    @DynamoDBAttribute(attributeName = "dateCreated")
-//    @DynamoDBIndexRangeKey(globalSecondaryIndexName = "org-created-index")
+    @DynamoDBIndexRangeKey(attributeName = "createdDate", globalSecondaryIndexName = "organisation-createdDate-index")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="Europe/London")
-    private Date created;
+    private Date createdDate;
 
     @DynamoDBAttribute(attributeName = "longitude")
     private double longitude;
@@ -65,17 +63,17 @@ public class Event implements Serializable, Comparable {
     /**
      *
      * @param user
-     * @param created
+     * @param createdDate
      * @param hash
-     * @param org
+     * @param organisation
      */
     public Event(final String user,
-                 final Date created,
+                 final Date createdDate,
                  final String hash,
-                 final String org) {
-        this.eventId = new EventId(hash, org);
-        this.user = user;
-        this.created = created;
+                 final String organisation) {
+        this.eventId = new EventId(hash, user);
+        this.createdDate = createdDate;
+        this.organisation = organisation;
     }
 
     @DynamoDBHashKey(attributeName = "hash")
@@ -88,30 +86,33 @@ public class Event implements Serializable, Comparable {
         eventId.setHash(hash);
     }
 
-    @DynamoDBRangeKey(attributeName = "org")
-    public String getOrg() {
-        return eventId != null ? eventId.getOrganisation() : null;
-    }
-
-    public void setOrg(final String organisation) {
-        if(eventId == null) eventId = new EventId();
-        eventId.setOrganisation(organisation);
-    }
-
+    @DynamoDBRangeKey(attributeName = "user")
     public String getUser() {
-        return user;
+        return eventId != null ? eventId.getUser() : null;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser(final String user) {
+        if(eventId == null) eventId = new EventId();
+        eventId.setUser(user);
     }
 
-    public Date getCreated() {
-        return created;
+
+
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
     }
 
     public double getLongitude() {
@@ -177,21 +178,12 @@ public class Event implements Serializable, Comparable {
 
         Event event = (Event) o;
 
-        return !(eventId != null ? !eventId.equals(event.eventId) : event.eventId != null);
+        return getHash().equals(event.getHash());
 
     }
 
     @Override
     public int hashCode() {
-        return eventId != null ? eventId.hashCode() : 0;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        if(o instanceof Event) {
-            return ((Event) o).getCreated().compareTo(this.created);
-        }
-
-        return 0;
+        return getHash().hashCode();
     }
 }

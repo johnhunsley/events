@@ -85,13 +85,19 @@ public class EventsRepositoryIntegrationTest {
 
     @Test
     public void testPageEventsByOrg() {
-        Page<Event> page = eventsRepository.findByOrg(orgId, new PageRequest(0,20));
+        Page<Event> page = eventsRepository.findByOrganisation(orgId, new PageRequest(0, 20));
         assertFalse(page.getContent().isEmpty());
     }
 
     @Test
     public void testFindEventsbyStatus() {
-        Page<Event> page = eventsRepository.findByOrgAndStatus(orgId, "Open", new PageRequest(0,20));
+        Page<Event> page = eventsRepository.findByOrganisationAndStatus(orgId, "Open", new PageRequest(0,20));
         assertFalse(page.getContent().isEmpty());
+    }
+
+    @Test
+    public void testFindByHashAndOrganisation() {
+        Collection<Event> results = eventsRepository.findByHashAndOrganisation("aDeYoa6xIibhJc1C2cU7Qw==", "4xnzkhxFnF1vMnj5N6knT7");
+        assertFalse(results.isEmpty());
     }
 }
