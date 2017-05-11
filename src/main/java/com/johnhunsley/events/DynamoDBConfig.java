@@ -30,8 +30,6 @@ public class DynamoDBConfig {
     @Value("${amazon.dynamodb.events.table}")
     private String table;
 
-    @Value("${amazon.dynamodb.events.index}")
-    private String index;
 
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
@@ -52,7 +50,4 @@ public class DynamoDBConfig {
         return table;
     }
 
-    public String getIndex() {
-        return index;
-    }
 }

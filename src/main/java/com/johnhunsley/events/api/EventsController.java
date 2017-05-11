@@ -35,33 +35,7 @@ public class EventsController {
 
     @Autowired
     private EventsPagingAndSortingRepository eventsRepository;
-//    private EventsRepository eventsRepository;
-    /**
-     *
-     * @param page
-     * @param size
-     * @param request
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
-    public ResponseEntity<Page<Event>> getOpenEventsByOrg(@RequestParam("page") final int page,
-                                                          @RequestParam("size") final int size,
-                                                          HttpServletRequest request) {
-        Account principle = accountResolver.getAccount(request);
 
-        try {
-            return new ResponseEntity<>(
-                    eventsRepository.findByOrganisationAndStatus(
-                            eventFactory.resolveOrgId(principle), "Open", new PageRequest(page, size)), HttpStatus.OK);
-
-        } catch (EventException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-    }
 
     /**
      * <p>
@@ -73,12 +47,11 @@ public class EventsController {
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value = "{priority}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
-    public ResponseEntity<Page<Event>> getEventsByOrgAndPriority(@PathVariable("priority") final String priority,
-                                                          @RequestParam("page") final int page,
-                                                          @RequestParam("size") final int size,
-                                                          HttpServletRequest request) {
+    public ResponseEntity<Page<Event>> getEventsByOrg(@RequestParam("page") final int page,
+                                                     @RequestParam("size") final int size,
+                                                     HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
         try {
