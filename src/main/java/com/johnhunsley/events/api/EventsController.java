@@ -4,13 +4,12 @@ import com.johnhunsley.events.domain.Event;
 import com.johnhunsley.events.domain.EventException;
 import com.johnhunsley.events.domain.EventFactory;
 import com.johnhunsley.events.repository.EventsPagingAndSortingRepository;
-import com.johnhunsley.events.repository.EventsRepository;
-import com.johnhunsley.events.repository.Page;
-import com.johnhunsley.events.repository.RepositoryException;
+//import com.johnhunsley.events.repository.Page;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +34,8 @@ public class EventsController {
     private AccountResolver accountResolver;
 
     @Autowired
-//    private EventsPagingAndSortingRepository eventsRepository;
-    private EventsRepository eventsRepository;
+    private EventsPagingAndSortingRepository eventsRepository;
+//    private EventsRepository eventsRepository;
     /**
      *
      * @param page
@@ -52,16 +51,15 @@ public class EventsController {
                                                           HttpServletRequest request) {
         Account principle = accountResolver.getAccount(request);
 
-//        try {
-//            return new ResponseEntity<>(
-//                    eventsRepository.findByOrganisationAndStatus(
-//                            eventFactory.resolveOrgId(principle), "Open", new PageRequest(page, size)), HttpStatus.OK);
-//
-//        } catch (EventException e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-        return null;
+        try {
+            return new ResponseEntity<>(
+                    eventsRepository.findByOrganisationAndStatus(
+                            eventFactory.resolveOrgId(principle), "Open", new PageRequest(page, size)), HttpStatus.OK);
+
+        } catch (EventException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
     }
 
@@ -86,13 +84,10 @@ public class EventsController {
         try {
             PageRequest pageRequest = new PageRequest(page, size);
             return new ResponseEntity<>(
-                    eventsRepository.findByOrganisationAndPriorityOrderByCreatedDateDesc(
-                            eventFactory.resolveOrgId(principle), priority, size, page), HttpStatus.OK);
+                    eventsRepository.findByOrganisationOrderByCreatedDateDesc(
+                            eventFactory.resolveOrgId(principle),  pageRequest), HttpStatus.OK);
 
         } catch (EventException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (RepositoryException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -28,7 +28,7 @@ public class EventsRepositoryDynamoDBImplIntegrationTest {
         try {
             Page<Event> eventPage =
                     eventsRepository.findByOrganisationAndPriorityOrderByCreatedDateDesc(
-                                                            "4xnzkhxFnF1vMnj5N6knT7", "High", 10, 1);
+                                                            "4xnzkhxFnF1vMnj5N6knT7", "High", 2, 2);
             assertFalse(eventPage.getPagedItems().isEmpty());
         } catch (RepositoryException e) {
             e.printStackTrace();

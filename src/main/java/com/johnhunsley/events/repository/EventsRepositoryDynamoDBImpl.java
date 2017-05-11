@@ -58,64 +58,67 @@ public class EventsRepositoryDynamoDBImpl implements EventsRepository {
                 .withKeyConditionExpression("organisation = :organisation")
                 .withFilterExpression("priority = :priority")
                 .withValueMap(new ValueMap().withString(":organisation", organisation)
-                                            .withString(":priority", priority)).withScanIndexForward(true)
+                                            .withString(":priority", priority)).withScanIndexForward(false)
                 .withMaxPageSize(pageSize);
         ItemCollection<QueryOutcome> items = index.query(spec);
         List<Event> pagedEvents = new ArrayList<>();
         int pageCount = 0;
 
         for(com.amazonaws.services.dynamodbv2.document.Page<Item, QueryOutcome> page : items.pages()) {
+                pageCount++;
 
-            if(pageNumber == ++pageCount) {
                 Iterator<Item> itemsItr = page.iterator();
 
                 while(itemsItr.hasNext()) {
                     Item item = itemsItr.next();
-                    Event event = new Event();
 
-                    for(String key : item.asMap().keySet()) {
+                    if(pageNumber == pageCount) {
+                        Event event = new Event();
 
-                        try {
+                        for(String key : item.asMap().keySet()) {
 
-                            if(PropertyUtils.isWriteable(event, key)) {
+                            try {
 
-                                if(PropertyUtils.getPropertyType(event, key).equals(String.class))
-                                    PropertyUtils.setProperty(event, key, item.getString(key));
+                                if(PropertyUtils.isWriteable(event, key)) {
 
-                                else if(PropertyUtils.getPropertyType(event, key).equals(Date.class)) {
+                                    if(PropertyUtils.getPropertyType(event, key).equals(String.class))
+                                        PropertyUtils.setProperty(event, key, item.getString(key));
 
-                                    try {
-                                        PropertyUtils.setProperty(event, key, df.parse(item.getString(key)));
+                                    else if(PropertyUtils.getPropertyType(event, key).equals(Date.class)) {
 
-                                    } catch (ParseException e) {
-                                        throw new RepositoryException(e);
+                                        try {
+                                            PropertyUtils.setProperty(event, key, df.parse(item.getString(key)));
+
+                                        } catch (ParseException e) {
+                                            throw new RepositoryException(e);
+                                        }
                                     }
+
+                                    else if(PropertyUtils.getPropertyType(event, key).equals(double.class))
+                                        PropertyUtils.setProperty(event, key, item.getDouble(key));
+
+                                    else if(PropertyUtils.getPropertyType(event, key).equals(Integer.class))
+                                        PropertyUtils.setProperty(event, key, item.getInt(key));
+
+                                    else throw new RepositoryException(key+" field of "+event.getClass()+ " unsupported type");
+
                                 }
 
-                                else if(PropertyUtils.getPropertyType(event, key).equals(double.class))
-                                    PropertyUtils.setProperty(event, key, item.getDouble(key));
-
-                                else if(PropertyUtils.getPropertyType(event, key).equals(Integer.class))
-                                    PropertyUtils.setProperty(event, key, item.getInt(key));
-
-                                else throw new RepositoryException(key+" field of "+event.getClass()+ " unsupported type");
-
+                            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                                throw new RepositoryException(e);
                             }
-
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            throw new RepositoryException(e);
                         }
+
+                        pagedEvents.add(event);
                     }
 
-                    pagedEvents.add(event);
-                }
-
-
-            }
+             }
         }
 
-        Collections.reverse(pagedEvents);
-        return new Page<>(pagedEvents, items.getAccumulatedItemCount(), pageCount);
+        final int totalItems = items.getAccumulatedItemCount();
+        final int totalPages = (totalItems + (pageSize - 1))/pageSize;
+        return new Page<>(pagedEvents, totalItems , totalPages);
+
     }
 
     @Override

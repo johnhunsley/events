@@ -20,15 +20,18 @@ import java.util.Date;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "class")
-@DynamoDBTable(tableName = "events3")
+@DynamoDBTable(tableName = "events2")
 public class Event implements Serializable {
     private static final long serialVersionUID = 100L;
 
 
-    @Id
-    @DynamoDBIgnore
-    @JsonIgnore
-    private EventId eventId;
+//    @Id
+//    @DynamoDBIgnore
+//    @JsonIgnore
+//    private EventId eventId;
+
+    @DynamoDBHashKey(attributeName = "hash")
+    private String hash;
 
     @DynamoDBIndexHashKey(attributeName = "organisation", globalSecondaryIndexName = "organisation-createdDate-index")
     private String organisation;
@@ -36,6 +39,9 @@ public class Event implements Serializable {
     @DynamoDBIndexRangeKey(attributeName = "createdDate", globalSecondaryIndexName = "organisation-createdDate-index")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:mm:ss:SSS", timezone="Europe/London")
     private Date createdDate;
+
+    @DynamoDBAttribute(attributeName = "user")
+    private String user;
 
     @DynamoDBAttribute(attributeName = "longitude")
     private double longitude;
@@ -71,32 +77,49 @@ public class Event implements Serializable {
                  final Date createdDate,
                  final String hash,
                  final String organisation) {
-        this.eventId = new EventId(hash, user);
+//        this.eventId = new EventId(hash, user);
+        this.hash = hash;
+        this.user = user;
         this.createdDate = createdDate;
         this.organisation = organisation;
     }
 
-    @DynamoDBHashKey(attributeName = "hash")
+//    @DynamoDBHashKey(attributeName = "hash")
+//    public String getHash() {
+//        return eventId != null ? eventId.getHash() : null;
+//    }
+//
+//    public void setHash(final String hash) {
+//        if(eventId == null) eventId = new EventId();
+//        eventId.setHash(hash);
+//    }
+//
+//    @DynamoDBRangeKey(attributeName = "user")
+//    public String getUser() {
+//        return eventId != null ? eventId.getUser() : null;
+//    }
+//
+//    public void setUser(final String user) {
+//        if(eventId == null) eventId = new EventId();
+//        eventId.setUser(user);
+//    }
+
+
     public String getHash() {
-        return eventId != null ? eventId.getHash() : null;
+        return hash;
     }
 
-    public void setHash(final String hash) {
-        if(eventId == null) eventId = new EventId();
-        eventId.setHash(hash);
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
-    @DynamoDBRangeKey(attributeName = "user")
     public String getUser() {
-        return eventId != null ? eventId.getUser() : null;
+        return user;
     }
 
-    public void setUser(final String user) {
-        if(eventId == null) eventId = new EventId();
-        eventId.setUser(user);
+    public void setUser(String user) {
+        this.user = user;
     }
-
-
 
     public Date getCreatedDate() {
         return createdDate;
