@@ -1,11 +1,14 @@
 package com.johnhunsley.events;
 
+import com.auth0.spring.security.api.JwtWebSecurityConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
@@ -20,13 +23,22 @@ import org.springframework.web.filter.CorsFilter;
  *         Date : 06/03/2017
  */
 @Configuration
+@EnableWebSecurity(debug = true)
 public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value(value = "${auth0.apiAudience}")
+    private String apiAudience;
+
+    @Value(value = "${auth0.issuer}")
+    private String issuer;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        JwtWebSecurityConfigurer
+                .forRS256(apiAudience, issuer)
+                .configure(http)
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+//                .antMatchers("/**").permitAll()
 
                 .antMatchers("/app/**").authenticated()
                 .and()
@@ -38,7 +50,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * <p>
-     *     Upgrade version of Spring prevents encode3d slashes by default
+     *     Upgrade version of Spring prevents encoded slashes by default
      *
      *     http://stackoverflow.com/questions/41588506/spring-security-defaulthttpfirewall-the-requesturi-cannot-contain-encoded-slas
      * </p>
@@ -52,7 +64,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * <p>
-     *     Upgrade version of Spring prevents encode3d slashes by default
+     *     Upgrade version of Spring prevents encoded slashes by default
      *
      *     http://stackoverflow.com/questions/41588506/spring-security-defaulthttpfirewall-the-requesturi-cannot-contain-encoded-slas
      * </p>

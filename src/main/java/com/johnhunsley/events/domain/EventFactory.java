@@ -1,8 +1,9 @@
 package com.johnhunsley.events.domain;
 
-import com.stormpath.sdk.account.Account;
-import com.stormpath.sdk.organization.Organization;
-import com.stormpath.sdk.organization.OrganizationList;
+
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.spring.security.api.authentication.AuthenticationJsonWebToken;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * <p>
  *     Factory for creating {@link Event} instances in which the USerId, OrgId and resulting Hash are derived
- *     from a given Stormpath {@link Account}
+ *     from a given Auth0
  * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
@@ -23,38 +25,28 @@ import java.util.Date;
  */
 @Component
 public class EventFactory {
+    public final static String ORGANISATION_KEY = "organisation";
+    public final static String PHONENUMBER_KEY = "PhoneNumber";
 
-    @Value("${stormpath.base.url}")
-    private String STORMPATH_API_BASE_URL;
+    @Value("${auth0.custom.claim.prefix}")
+    private String customClaimPrefix;
 
-    @Value("${stormpath.version.path}")
-    private String STORMPATH_API_VERSION;
-
-    @Value("${stormpath.accounts.path}")
-    private String STORMPATH_API_ACCOUNTS_PATH;
-
-    @Value("${stormpath.org.path}")
-    private String STORMPATH_API_ORG_PATH;
-
-    private String stormpathAccountsUrl;
-
-    private String stormpathOrgsUrl;
+    private String organisationClaim;
 
     @PostConstruct
     public void init() {
-        stormpathAccountsUrl = STORMPATH_API_BASE_URL+STORMPATH_API_VERSION+STORMPATH_API_ACCOUNTS_PATH;
-        stormpathOrgsUrl = STORMPATH_API_BASE_URL+STORMPATH_API_VERSION+STORMPATH_API_ORG_PATH;
+       organisationClaim = customClaimPrefix+ORGANISATION_KEY;
     }
 
     /**
      * <p>
      *    Create an {@link Event} from the given credentials with a created date of now
      * </p>
-     * @param account
+     * @param token
      * @return {@link Event}
      */
-    public Event createEvent(Account account) throws EventException {
-        return createEvent(account, DateTime.now().toDate());
+    public Event createEvent(AuthenticationJsonWebToken token) throws EventException {
+        return createEvent(token, DateTime.now().toDate());
     }
 
     /**
@@ -62,76 +54,67 @@ public class EventFactory {
      *     Create an {@link Event} from the given credentials and given date. UserId, OrgId
      *     and Hash are derived from the given Account.
      * </p>
-     * @param account
+     * @param token
      * @param date
      * @return {@link Event}
      */
-    public Event createEvent(Account account, Date date) throws EventException {
-        final String userId = resolveUserId(account);
-        final String orgId = resolveOrgId(account);
+    public Event createEvent(AuthenticationJsonWebToken token, Date date) throws EventException {
+        final String userId = resolveUserId(token);
+        final String orgId = resolveOrgId(token);
         return new Event(userId, date, md5Hash(userId, date), orgId);
     }
 
     /**
      * <p>
-     *     Creates a new {@link Event} instance using the given {@link Account} credentials and the
+     *     Creates a new {@link Event} instance using the given {@link Object} credentials and the
      *     given Event instance properties. Only the credentials from the given account are used to
      *     formulate the Hash, userId and OrgId of the resulting Event instance
      * </p>
-     * @param account
+     * @param token
      * @param template
      * @return
      * @throws EventException
      */
-    public Event createEventFromTemplate(Account account, Event template) throws EventException {
-        Event event = createEvent(account);
+    public Event createEventFromTemplate(AuthenticationJsonWebToken token, Event template) throws EventException {
+        Event event = createEvent(token);
         event.setStatus(template.getStatus());
         event.setPriority(template.getPriority());
         event.setLatitude(template.getLatitude());
         event.setLongitude(template.getLongitude());
-        event.setFirstName(account.getGivenName());
-        event.setLastName(account.getSurname());
-        event.setPhoneNumber(account.getCustomData().get("PhoneNumber").toString());
+//        event.setFirstName(user.getGivenName());
+//        event.setLastName(user.getFamilyName());
+//        event.setPhoneNumber(user.getExtraInfo().get(PHONENUMBER_KEY).toString());
         return event;
     }
 
     /**
      * <p>
-     *      Derives the Stormpath userId from the HREF of the given {@link Account} instance
+     *      Derives the Stormpath userId from the HREF of the given {@link Object} instance
      * </p>
-     * @param account
+     * @param token
      * @return userID
      * @throws EventException
      */
-    public String resolveUserId(Account account) throws EventException {
-        final String userHref = account.getHref();
-        final String userId = userHref.substring(stormpathAccountsUrl.length());
-
-        if(userId.length() < 1) throw new EventException("Invalid userId within account HREF - "+userHref);
-
-        return userId;
+    public String resolveUserId(AuthenticationJsonWebToken token) throws EventException {
+        return token.getPrincipal().toString();
     }
 
     /**
      * <p>
-     *  Derives the organisationId from the HREF of the given {@link Account}
+     *  Derives the organisationId from the HREF of the given {@link Object}
      * </p>
-     * @param account
+     * @param token
      * @return
      * @throws EventException
      */
-    public String resolveOrgId(Account account) throws EventException {
-        OrganizationList list =  account.getDirectory().getOrganizations();
+    public String resolveOrgId(AuthenticationJsonWebToken token) throws EventException {
+        DecodedJWT decoded = (DecodedJWT)token.getDetails();
+        final Claim claim = decoded.getClaim(organisationClaim);
 
-        if(list.getSize() != 1) throw new EventException(
-                "Account "+account.getHref()+" is not associated to a single Organisation. Org list size = "+list.getSize());
+        if(claim == null) throw new EventException("No custom org claim for user "+token.getPrincipal().toString());
 
-        Organization org = list.iterator().next();
-        final String orgId = org.getHref().substring(stormpathOrgsUrl.length());
-
-        if(orgId.length() < 1) throw new EventException("Invalid orgId within org HREF - "+org.getHref());
-
-        return orgId;
+        String claimStr =  claim.asString();
+        return claimStr;
     }
 
     /**

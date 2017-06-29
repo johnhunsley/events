@@ -1,16 +1,18 @@
 package com.johnhunsley.events.api;
 
+import com.auth0.spring.security.api.authentication.AuthenticationJsonWebToken;
 import com.johnhunsley.events.domain.Event;
 import com.johnhunsley.events.domain.EventException;
 import com.johnhunsley.events.domain.EventFactory;
 import com.johnhunsley.events.domain.EventId;
 import com.johnhunsley.events.repository.EventsPagingAndSortingRepository;
-import com.stormpath.sdk.account.Account;
-import com.stormpath.sdk.servlet.account.AccountResolver;
+//import com.stormpath.sdk.account.Account;
+//import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,8 +31,8 @@ public class EventController {
     @Autowired
     private EventFactory eventFactory;
 
-    @Autowired
-    private AccountResolver accountResolver;
+//    @Autowired
+//    private AccountResolver accountResolver;
 
     @Autowired
     private EventsPagingAndSortingRepository eventsRepository;
@@ -45,17 +47,21 @@ public class EventController {
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     @PreAuthorize("hasPermission('customer', 'CUSTOMER')")
     public ResponseEntity createEvent(@RequestBody Event template, HttpServletRequest request) {
-        Account principle = accountResolver.getAccount(request);
-
-        try {
-            eventsRepository.save(
-                    eventFactory.createEventFromTemplate(principle, template));
-            return new ResponseEntity(HttpStatus.ACCEPTED);
-
-        } catch (EventException e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+//        Account principle = accountResolver.getAccount(request);
+        AuthenticationJsonWebToken authentication = (AuthenticationJsonWebToken) SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getDetails().toString());
+//        final Auth0User user = SessionUtils.getAuth0User(request);
+//
+//        try {
+//            eventsRepository.save(
+//                    eventFactory.createEventFromTemplate(user, template));
+//            return new ResponseEntity(HttpStatus.ACCEPTED);
+//
+//        } catch (EventException e) {
+//            e.printStackTrace();
+//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+//        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -63,25 +69,28 @@ public class EventController {
     @RequestMapping(value = "{hash}", method = RequestMethod.GET, produces = "application/json")
     @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity<Event> getEventById(@PathVariable("hash") final String hash, HttpServletRequest request) {
-        Account principle = accountResolver.getAccount(request);
+//        Account principle = accountResolver.getAccount(request);
+//        final Auth0User user = SessionUtils.getAuth0User(request);
 
-        try {
-            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(principle));
+//        try {
+//            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(user));
+//
+//            if(events.isEmpty() || events.size() > 1) {
+//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
+//
+//            Event event = events.iterator().next();
+//
+//            if(event !=  null) return new ResponseEntity<>(event, HttpStatus.OK);
+//
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//
+//        } catch (EventException e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
 
-            if(events.isEmpty() || events.size() > 1) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-            Event event = events.iterator().next();
-
-            if(event !=  null) return new ResponseEntity<>(event, HttpStatus.OK);
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } catch (EventException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -98,24 +107,27 @@ public class EventController {
     @RequestMapping(value = "{hash}", method = RequestMethod.PUT, consumes = "application/json")
     @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity updateEvent(@PathVariable final String hash, @RequestBody final Event template, HttpServletRequest request) {
-        Account principle = accountResolver.getAccount(request);
+//        Account principle = accountResolver.getAccount(request);
+//        final Auth0User user = SessionUtils.getAuth0User(request);
 
-        try {
-            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(principle));
+//        try {
+//            Collection<Event> events = eventsRepository.findByHashAndOrganisation(hash, eventFactory.resolveOrgId(user));
+//
+//            if(events.isEmpty() || events.size() > 1) {
+//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
+//
+//            Event event = events.iterator().next();
+//            event.setStatus(template.getStatus());
+//            eventsRepository.save(event);
+//            return new ResponseEntity(HttpStatus.ACCEPTED);
+//
+//        } catch (EventException e) {
+//            e.printStackTrace();
+//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+//        }
 
-            if(events.isEmpty() || events.size() > 1) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-            Event event = events.iterator().next();
-            event.setStatus(template.getStatus());
-            eventsRepository.save(event);
-            return new ResponseEntity(HttpStatus.ACCEPTED);
-
-        } catch (EventException e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
 }

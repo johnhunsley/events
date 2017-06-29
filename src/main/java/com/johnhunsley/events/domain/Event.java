@@ -24,12 +24,6 @@ import java.util.Date;
 public class Event implements Serializable {
     private static final long serialVersionUID = 100L;
 
-
-//    @Id
-//    @DynamoDBIgnore
-//    @JsonIgnore
-//    private EventId eventId;
-
     @DynamoDBHashKey(attributeName = "hash")
     private String hash;
 
@@ -83,27 +77,6 @@ public class Event implements Serializable {
         this.createdDate = createdDate;
         this.organisation = organisation;
     }
-
-//    @DynamoDBHashKey(attributeName = "hash")
-//    public String getHash() {
-//        return eventId != null ? eventId.getHash() : null;
-//    }
-//
-//    public void setHash(final String hash) {
-//        if(eventId == null) eventId = new EventId();
-//        eventId.setHash(hash);
-//    }
-//
-//    @DynamoDBRangeKey(attributeName = "user")
-//    public String getUser() {
-//        return eventId != null ? eventId.getUser() : null;
-//    }
-//
-//    public void setUser(final String user) {
-//        if(eventId == null) eventId = new EventId();
-//        eventId.setUser(user);
-//    }
-
 
     public String getHash() {
         return hash;

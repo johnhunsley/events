@@ -1,9 +1,9 @@
 package com.johnhunsley.events.domain;
 
-import com.stormpath.sdk.account.Account;
-import com.stormpath.sdk.directory.Directory;
-import com.stormpath.sdk.organization.Organization;
-import com.stormpath.sdk.organization.OrganizationList;
+//import com.stormpath.sdk.account.Account;
+//import com.stormpath.sdk.directory.Directory;
+//import com.stormpath.sdk.organization.Organization;
+//import com.stormpath.sdk.organization.OrganizationList;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
