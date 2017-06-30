@@ -44,8 +44,6 @@ public class EventControllerTest {
     @MockBean
     private EventFactory eventFactory;
 
-//    @MockBean
-//    private AccountResolver accountResolver;
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,7 +62,7 @@ public class EventControllerTest {
         given(eventsRepository.save(event)).willReturn(event);
 
         mockMvc.perform(post("/app/event/").contentType("application/json").content(mapper.writeValueAsString(event)))
-                .andDo(print())
+//                .andDo(print())
 //                .andExpect(status().is(HttpStatus.SC_ACCEPTED))
                 .andReturn();
     }

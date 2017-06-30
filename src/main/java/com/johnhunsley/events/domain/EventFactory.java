@@ -6,13 +6,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.spring.security.api.authentication.AuthenticationJsonWebToken;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * <p>
@@ -26,7 +24,6 @@ import java.util.Map;
 @Component
 public class EventFactory {
     public final static String ORGANISATION_KEY = "organisation";
-    public final static String PHONENUMBER_KEY = "PhoneNumber";
 
     @Value("${auth0.custom.claim.prefix}")
     private String customClaimPrefix;
