@@ -38,8 +38,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
                 .forRS256(apiAudience, issuer)
                 .configure(http)
                 .authorizeRequests()
-//                .antMatchers("/**").permitAll()
-
+                .antMatchers(HttpMethod.OPTIONS, "/app/**").permitAll()
                 .antMatchers("/app/**").authenticated()
                 .and()
                     .sessionManagement()
