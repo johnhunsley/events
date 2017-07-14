@@ -24,15 +24,24 @@ import java.util.Date;
 @Component
 public class EventFactory {
     public final static String ORGANISATION_KEY = "organisation";
+    public final static String FIRSTNAME_KEY = "firstName";
+    public final static String LASTNAME_KEY = "lastName";
+    public final static String PHONE_KEY = "phoneNumber";
 
     @Value("${auth0.custom.claim.prefix}")
     private String customClaimPrefix;
 
     private String organisationClaim;
+    private String firstNameClaim;
+    private String lastNameClaim;
+    private String phoneClaim;
 
     @PostConstruct
     public void init() {
-       organisationClaim = customClaimPrefix+ORGANISATION_KEY;
+        organisationClaim = customClaimPrefix+ORGANISATION_KEY;
+        firstNameClaim = customClaimPrefix+FIRSTNAME_KEY;
+        lastNameClaim = customClaimPrefix+LASTNAME_KEY;
+        phoneClaim = customClaimPrefix+PHONE_KEY;
     }
 
     /**
@@ -78,9 +87,10 @@ public class EventFactory {
         event.setPriority(template.getPriority());
         event.setLatitude(template.getLatitude());
         event.setLongitude(template.getLongitude());
-//        event.setFirstName(user.getGivenName());
-//        event.setLastName(user.getFamilyName());
-//        event.setPhoneNumber(user.getExtraInfo().get(PHONENUMBER_KEY).toString());
+        DecodedJWT decoded = (DecodedJWT)token.getDetails();
+        event.setFirstName(decoded.getClaim(firstNameClaim).asString());
+        event.setLastName(decoded.getClaim(lastNameClaim).asString());
+        event.setPhoneNumber(decoded.getClaim(phoneClaim).asString());
         return event;
     }
 

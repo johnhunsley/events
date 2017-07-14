@@ -41,7 +41,6 @@ public class EventsController {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-//    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
     public ResponseEntity<Page<Event>> getEventsByOrg(@RequestParam("page") final int page,
                                                      @RequestParam("size") final int size) {
         AuthenticationJsonWebToken authentication = (AuthenticationJsonWebToken)SecurityContextHolder.getContext().getAuthentication();
