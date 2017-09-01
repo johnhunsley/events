@@ -43,7 +43,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/app/**").permitAll()
                 .antMatchers("/app/events/").hasRole("SERVICE_PROVIDER")
-                .antMatchers("/app/event/*").hasRole("SERVICE_PROVIDER")
+                .antMatchers("/app/event/**").hasRole("SERVICE_PROVIDER")
                 .antMatchers("/app/client/").hasAnyRole("CUSTOMER", "SERVICE_PROVIDER")
                 .and()
                     .sessionManagement()
