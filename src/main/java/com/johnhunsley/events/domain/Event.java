@@ -71,7 +71,6 @@ public class Event implements Serializable {
                  final Date createdDate,
                  final String hash,
                  final String organisation) {
-//        this.eventId = new EventId(hash, user);
         this.hash = hash;
         this.user = user;
         this.createdDate = createdDate;

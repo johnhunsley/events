@@ -4,7 +4,6 @@ import com.auth0.spring.security.api.authentication.AuthenticationJsonWebToken;
 import com.johnhunsley.events.domain.Event;
 import com.johnhunsley.events.domain.EventException;
 import com.johnhunsley.events.domain.EventFactory;
-import com.johnhunsley.events.domain.EventId;
 import com.johnhunsley.events.repository.EventsPagingAndSortingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 /**

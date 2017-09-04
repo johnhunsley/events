@@ -1,13 +1,11 @@
 package com.johnhunsley.events.repository;
 
 import com.johnhunsley.events.domain.Event;
-import com.johnhunsley.events.domain.EventId;
 import org.socialsignin.spring.data.dynamodb.repository.DynamoDBPagingAndSortingRepository;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScanCount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
@@ -17,7 +15,7 @@ import java.util.Collection;
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
  */
-public interface EventsPagingAndSortingRepository extends DynamoDBPagingAndSortingRepository<Event, EventId> {
+public interface EventsPagingAndSortingRepository extends DynamoDBPagingAndSortingRepository<Event, String> {
 
     @EnableScan
     @EnableScanCount
