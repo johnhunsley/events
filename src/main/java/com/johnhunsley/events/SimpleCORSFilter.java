@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * <p>
+ *     Add CORS Headers for default response
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 12/07/2017

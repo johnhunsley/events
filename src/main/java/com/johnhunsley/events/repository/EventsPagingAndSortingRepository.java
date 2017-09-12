@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Collection;
 
 /**
+ * <p>
+ *     Basic CRUD repo with extension for paging and sorting by global index
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017

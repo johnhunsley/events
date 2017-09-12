@@ -15,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * <p>
+ *     REST Controller for searching and paging {@link Event} instances
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 07/03/2017
@@ -33,16 +36,16 @@ public class EventsController {
 
     /**
      * <p>
-     *     Get the {@link Event} instances for the authenitcated user's org and given priority
+     *     Get the {@link Event} instances for the authenticated user's org
      * </p>
      * @param page
      * @param size
-     * @return
+     * @return {@link ResponseEntity<Page<Event>>}
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Page<Event>> getEventsByOrg(@RequestParam("page") final int page,
-                                                     @RequestParam("size") final int size) {
+    public ResponseEntity<Page<Event>> getEvents(@RequestParam("page") final int page,
+                                                 @RequestParam("size") final int size) {
         AuthenticationJsonWebToken authentication = (AuthenticationJsonWebToken)SecurityContextHolder.getContext().getAuthentication();
 
         try {
@@ -55,9 +58,5 @@ public class EventsController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
-
-
-
 }

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 /**
+ * <p>
+ *     REST controller for accessing a single {@link Event} identified by unique hash
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 18/04/2017
@@ -31,9 +34,11 @@ public class EventController {
     private EventsPagingAndSortingRepository eventsRepository;
 
     /**
-     *
-     * @param template
-     * @return
+     * <p>
+     *     Create an {@link Event} instance using the given instance as a template
+     * </p>
+     * @param {@link Event} template
+     * @return {@link ResponseEntity} with 202 HTTP Code
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
@@ -53,6 +58,13 @@ public class EventController {
 
     }
 
+    /**
+     * <p>
+     *     Read by given unique hash ID
+     * </p>
+     * @param {@link String} hash
+     * @return {@link ResponseEntity<Event>}
+     */
     @CrossOrigin
     @RequestMapping(value = "{hash}", method = RequestMethod.GET, produces = "application/json")
 //    @PreAuthorize("hasPermission('serviceProvider', 'SERVICE_PROVIDER')")
@@ -82,6 +94,7 @@ public class EventController {
      * <p>
      *     Updates the status of the resolved {@link Event} with the status of the given object
      *     //todo maybe move this to a service instance and update all the event fields from the given template object
+     *     //should be PATCH
      * </p>
      * @param hash
      * @param template

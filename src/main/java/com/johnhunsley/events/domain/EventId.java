@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * @deprecated Not using compound ID
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017

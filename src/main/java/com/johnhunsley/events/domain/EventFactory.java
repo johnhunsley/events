@@ -78,7 +78,7 @@ public class EventFactory {
      * </p>
      * @param token
      * @param template
-     * @return
+     * @return {@link Event}
      * @throws EventException
      */
     public Event createEventFromTemplate(AuthenticationJsonWebToken token, Event template) throws EventException {
@@ -96,7 +96,7 @@ public class EventFactory {
 
     /**
      * <p>
-     *      Derives the Stormpath userId from the HREF of the given {@link Object} instance
+     *      Derives the Auth0 userId from the HREF of the given {@link AuthenticationJsonWebToken} instance
      * </p>
      * @param token
      * @return userID
@@ -108,10 +108,10 @@ public class EventFactory {
 
     /**
      * <p>
-     *  Derives the organisationId from the HREF of the given {@link Object}
+     *  Derives the organisationId from the HREF of the given {@link AuthenticationJsonWebToken}
      * </p>
      * @param token
-     * @return
+     * @return {@link String} claim
      * @throws EventException
      */
     public String resolveOrgId(AuthenticationJsonWebToken token) throws EventException {
@@ -131,7 +131,7 @@ public class EventFactory {
      * </p>
      * @param user
      * @param created
-     * @return
+     * @return {@link String} md5 hash of the given user and date
      */
     private String md5Hash(final String user, final Date created) {
         final String str = user+":"+created.toString();

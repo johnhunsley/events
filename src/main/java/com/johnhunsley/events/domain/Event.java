@@ -11,6 +11,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * <p>
+ *     A domain model type which represents an event of a priority created at a moment in time at a location
+ *     by a user from an organisation
+ * </p>
  * @author John Hunsley
  *         jphunsley@gmail.com
  *         Date : 06/03/2017
